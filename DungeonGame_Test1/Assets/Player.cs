@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Player : Character
 {
+    private Animator animator;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+
     [Header("Combat WIP")]
     public float critChance = 0.1f;
     public float critMultiplier = 2f;
@@ -32,6 +35,11 @@ public class Player : Character
 
     private void Start()
     {
+        animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            Debug.LogWarning("Animator not found on Player.");
+        }
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
         rb.freezeRotation = true;
@@ -55,21 +63,33 @@ public class Player : Character
 
     private void Update()
     {
-        // Handle input
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveY = Input.GetAxisRaw("Vertical");
+        float moveX = Input.GetAxis("Horizontal");
+        float moveY = Input.GetAxis("Vertical");
         inputDirection = new Vector2(moveX, moveY).normalized;
         isMoving = inputDirection.magnitude > 0;
 
+        // Flip only the sprite, not the whole transform!
+        if (inputDirection.x > 0)
+            spriteRenderer.flipX = false;
+        else if (inputDirection.x < 0)
+            spriteRenderer.flipX = true;
+
+        animator.SetFloat("Speed", inputDirection.magnitude);
+
         RotateWeaponToMouse();
 
-        // Handle attack
         if (Input.GetMouseButtonDown(0) && Time.time >= lastAttackTime + weaponCooldown)
         {
             lastAttackTime = Time.time;
             StartCoroutine(PerformWeaponAttack());
         }
+
+        if (animator != null)
+        {
+            animator.SetBool("IsMoving", isMoving);
+        }
     }
+
 
     private void FixedUpdate()
     {

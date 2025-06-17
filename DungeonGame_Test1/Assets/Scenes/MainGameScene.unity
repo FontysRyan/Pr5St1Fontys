@@ -42590,7 +42590,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: -2009999308, guid: 9fadcc6c0199a0e47861f91698c5b296, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -42618,7 +42618,7 @@ MonoBehaviour:
   walkSpeed: 6
   characterType: 0
   health: 5
-  resistance: 1
+  resistance: 0.5
   weaponID: 0
   Type: 0
   IsBoss: 0
@@ -42768,13 +42768,15 @@ MonoBehaviour:
   weaponID: 0
   critChance: 0
   critMultiplier: 0
-  dmgAmplifier: 0
+  dmgAmplifier: 1
   coins: 0
   upgrades: 0
   glideFriction: 18
   weaponTransform: {fileID: 0}
   weaponObjectName: Weapon
   weaponDistance: 1.2
+  weaponCooldown: 0.5
+  weaponDamage: 2
 --- !u!212 &1136876868
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -68638,7 +68640,7 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
