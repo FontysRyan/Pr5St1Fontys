@@ -8,14 +8,22 @@ public class Player : Character
     public float critChance;
     public float critMultiplier;
     public float dmgAmplifier;
+
     [Header("Coins/Upgrades WIP")]
     public int coins;
     public int upgrades;
+
     [Header("Movement")]
     public float glideFriction = 5f;
     private Rigidbody2D rb;
     private Vector2 inputDirection;
     private bool isMoving;
+    private Animator weaponAnimator;
+
+    [Header("Weapon")]
+    public Transform weaponTransform;
+    public string weaponObjectName = "Weapon";
+    [SerializeField] public float weaponDistance = 1f;
 
     private void Start()
     {
@@ -23,18 +31,64 @@ public class Player : Character
         rb.gravityScale = 0f;
         rb.freezeRotation = true;
         characterType = 1;
+
+        // Auto-find weapon
+        if (weaponTransform == null)
+        {
+            Transform found = transform.Find(weaponObjectName);
+            if (found != null)
+            {
+                weaponTransform = found;
+            }
+            else
+            {
+                Debug.LogWarning("Weapon transform not assigned and not found as child.");
+            }
+        }
+
+        // Find animator on weapon
+        if (weaponTransform != null)
+        {
+            weaponAnimator = weaponTransform.GetComponent<Animator>();
+            if (weaponAnimator == null)
+            {
+                Debug.LogWarning("Animator not found on weapon.");
+            }
+        }
     }
 
+    private void RotateWeaponToMouse()
+    {
+        // Rotate weapon toward mouse
+        if (weaponTransform != null)
+        {
+            Vector3 mouseScreenPos = Input.mousePosition;
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
+            mouseWorldPos.z = 0f;
+
+            Vector2 direction = (mouseWorldPos - transform.position).normalized;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+            weaponTransform.rotation = Quaternion.Euler(0, 0, angle - 45f);
+            Vector3 offset = direction * weaponDistance;
+            weaponTransform.position = transform.position + offset;
+        }
+    }
     private void Update()
     {
-        // Get input from WASD or arrow keys
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
 
         inputDirection = new Vector2(moveX, moveY).normalized;
-
-        // Set isMoving flag if there's input
         isMoving = inputDirection.magnitude > 0;
+
+        RotateWeaponToMouse();
+
+        // Play attack animation on left click
+        if (Input.GetMouseButtonDown(0))
+        {
+            weaponAnimator?.SetTrigger("Attack1");
+        }
     }
 
     private void FixedUpdate()
@@ -45,24 +99,18 @@ public class Player : Character
         }
         else
         {
-            // Apply friction to slow down gradually when no input
             rb.velocity = Vector2.Lerp(rb.velocity, Vector2.zero, glideFriction * Time.fixedDeltaTime);
         }
     }
 
     public override void MoveEntity(float moveSpeed)
     {
-        // Smoothly glide toward input direction velocity
         Vector2 targetVelocity = inputDirection * moveSpeed;
-
-        // Lerp current velocity towards target velocity for smooth glide effect
         rb.velocity = Vector2.Lerp(rb.velocity, targetVelocity, glideFriction * Time.fixedDeltaTime);
     }
 
-
     public int CalculateDamage()
     {
-        //wip
         return 0;
     }
 
@@ -72,5 +120,4 @@ public class Player : Character
         target.TakeDamage(damage);
         Debug.Log($"{characterName} attacked {target.characterName} for {damage} damage.");
     }
-
 }
