@@ -42527,6 +42527,7 @@ GameObject:
   - component: {fileID: 883058562}
   - component: {fileID: 883058563}
   - component: {fileID: 883058564}
+  - component: {fileID: 883058565}
   m_Layer: 0
   m_Name: EnemyGoblin
   m_TagString: Enemy
@@ -42623,6 +42624,22 @@ MonoBehaviour:
   IsBoss: 0
   DefaultDamage: 0
   DifficultyDMGAmplifier: 0
+--- !u!70 &883058565
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 883058561}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.00000023841858}
+  m_Size: {x: 0.99999994, y: 0.99999994}
+  m_Direction: 0
 --- !u!1 &889001887
 GameObject:
   m_ObjectHideFlags: 0
