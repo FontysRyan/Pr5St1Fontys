@@ -28,8 +28,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/carsc/Documents/GitHub/Pr5St1Fontys/DungeonDaddies/DungeonDaddies/Pages/Login/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/carsc/Documents/GitHub/Pr5St1Fontys/DungeonDaddies/DungeonDaddies/Pages/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpdmFjeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/carsc/Documents/GitHub/Pr5St1Fontys/DungeonDaddies/DungeonDaddies/Pages/Register/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/carsc/Documents/GitHub/Pr5St1Fontys/DungeonDaddies/DungeonDaddies/Pages/Runs/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUnVuc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/carsc/Documents/GitHub/Pr5St1Fontys/DungeonDaddies/DungeonDaddies/Pages/Shared/_ValidationScriptsPartial.cshtml]
