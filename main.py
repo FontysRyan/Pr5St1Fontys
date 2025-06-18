@@ -50,7 +50,7 @@ def generate_noise(size, seed):
     return map
 
 #Dit is een extra functie die de map neemt en er random noise overheen gooit.
-def distort_map(map, intensity=0.05):
+def distort_map(map, intensity=random.uniform(0, 0.02)):
     noise_distort = np.random.uniform(-intensity, intensity, size=map.shape)
     return map + noise_distort
 
