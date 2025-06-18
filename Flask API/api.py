@@ -135,7 +135,7 @@ def r_pw():
 
 # Endpoint to register new user
 @app.route('/register', methods=['POST'])
-def create_user():
+def register():
     try:
         # Assign data from POST request
         data = request.get_json()
@@ -155,7 +155,9 @@ def create_user():
 
         if account_exists['status'] == "EXISTS":
             if account_exists['found_by'] is not None:
-                return jsonify({"error": "Account already exists by" + account_exists['found_by']})
+                return jsonify({
+                    "error": "Account already exists by " + ", ".join(account_exists['found_by'])
+                })
             
         # Hash password
         password_hash = ph.hash(password) 
@@ -171,9 +173,17 @@ def create_user():
         cursor.execute(query, (email, password_hash, username, first_name, last_name))
 
         mysql.connection.commit()
+        
+        account_id = cursor.lastrowid
         cursor.close()
 
-        return jsonify({'success': True, 'message': 'User created successfully'}), 201
+
+        return jsonify({
+                    'success': True, 
+                    'message': 'User created successfully',
+                    'account_id': account_id,
+                    'email': email
+        })
 
     except Exception as e:
         print(f"Error creating user: {e}")
