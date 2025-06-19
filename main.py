@@ -9,6 +9,13 @@ if len(sys.argv) <= 1:
 else:
     map_amount = int(sys.argv[1])
 
+def make_map_int(arr):
+    rows, cols = arr.shape
+    for i in range(rows):
+        for j in range(cols):
+            arr[i, j] = int(arr[i, j])
+    return arr
+
 def set_map_numbers_from_random(arr, value):
     for i in range(len(arr)):
         for n in range(len(arr[0])):
@@ -79,6 +86,7 @@ def generate_map(size, seed):
     map = generate_noise(size, seed)
     map = distort_map(map, intensity=0)
     map = set_map_numbers_from_random(map, 1)
+    map = make_map_int(map)
     return map
 
 #De laatste functie, deze kijkt doormiddel van BFS om te kijken of er een pad is door de map.
@@ -123,6 +131,7 @@ def gen_map(map_amount):
         map = generate_valid_map((51, 51), 0)
         map = add_random_in_list(map, 1, 2, 10)
         map = add_random_in_list(map, 1, 3, 10)
+        print(map)
         # for i in range(len(map)):
         #     print(map[i])
         with open('maps/data'+str(i)+'.json', 'w', encoding='utf-8') as f:
