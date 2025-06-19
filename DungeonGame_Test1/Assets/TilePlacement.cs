@@ -89,7 +89,7 @@ public class TilePlacement : MonoBehaviour
             float[] row = mapData.map_data[y];
             for (int x = 0; x < row.Length; x++)
             {
-                print(row);
+                //print(row);
                 if (Mathf.Approximately(row[x], 1f))
                     FloorTilemap.SetTile(new Vector3Int(x, -y, 0), Floor);
                 else
