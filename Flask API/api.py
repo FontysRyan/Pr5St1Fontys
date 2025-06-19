@@ -5,6 +5,9 @@ from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 import string
 import secrets
+import subprocess
+import json
+import MapGeneration.genmap as mapgen
 
 # Not yet implemented
 import requests
@@ -132,6 +135,16 @@ def r_pw():
         print(f"Error fetching users: {e}")
         return jsonify({'success': False, 'message': 'Server error'}), 500
     
+
+def generate_maps(map_amount):
+    maps = []
+    for i in range(map_amount):
+        map_data = mapgen.generate_valid_map((51, 51), 0)
+        map_data = mapgen.add_random_in_list(map_data, 1, 2, 10)
+        map_data = mapgen.add_random_in_list(map_data, 1, 3, 10)
+        maps.append(map_data.tolist())  # Return as Python list, not file
+    return maps
+
 
 # Endpoint to register new user
 @app.route('/register', methods=['POST'])
@@ -396,7 +409,12 @@ def submit_run():
         damage_dealt = data.get('damage_dealt')
         deaths = data.get('deaths')
         player_id = data.get('player_id')
-        maps = data.get('maps', [])
+        # maps = data.get('maps', [])
+
+        map_amount = data.get('map_amount', 3)
+
+        maps = generate_maps(map_amount)
+        maps_json = [json.dumps(m) for m in maps]
 
         # Check if all fields are filled, return if not
         if not playtime or not enemies_killed or not hits or not damage_dealt or not deaths or not player_id or not maps:
@@ -525,6 +543,30 @@ def fetch_runs(account_id):
         print(f"Error fetching maps: {e}")
         return jsonify({'success': False, 'message': 'Server error'}), 500
 
+
+# Fetch maps 
+@app.route('/fetch-maps/<int:limit>', methods=['GET'])
+def fetch_maps(limit):
+    try:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        
+        # Query to select all runs and username with player_id
+        query = """
+            SELECT *
+            FROM maps 
+            LIMIT %s;
+        """
+
+        cursor.execute(query, (limit,))
+        result = cursor.fetchall()
+
+        cursor.close()
+
+        return jsonify(result)
+    except Exception as e:
+        print(f"Error fetching maps: {e}")
+        return jsonify({'success': False, 'message': 'Server error'}), 500
+    
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

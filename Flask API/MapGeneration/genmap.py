@@ -125,7 +125,9 @@ def gen_map(map_amount):
         map = add_random_in_list(map, 1, 3, 10)
         # for i in range(len(map)):
         #     print(map[i])
+        print(map)
         with open('maps/data'+str(i)+'.json', 'w', encoding='utf-8') as f:
             json.dump(map.tolist(), f, ensure_ascii=False, indent=4)
+
 
 print(gen_map(map_amount))
