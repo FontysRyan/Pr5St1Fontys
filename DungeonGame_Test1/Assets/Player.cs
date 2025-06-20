@@ -28,8 +28,8 @@ public class Player : Character
    
     private void Update()
     {
-        float moveX = Input.GetAxis("Horizontal");
-        float moveY = Input.GetAxis("Vertical");
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveY = Input.GetAxisRaw("Vertical");
         inputDirection = new Vector2(moveX, moveY).normalized;
         DetermineMovementDirection();
 

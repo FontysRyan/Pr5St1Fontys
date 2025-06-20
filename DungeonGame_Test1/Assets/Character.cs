@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    protected Animator animator; //verplaats naar character
-    [SerializeField] protected SpriteRenderer spriteRenderer; //verplaats naar character
+    protected Animator animator; 
+    [SerializeField] protected SpriteRenderer spriteRenderer; 
     [Header("Character stats")]
     public string characterName;
     public float walkSpeed;
@@ -15,18 +15,18 @@ public class Character : MonoBehaviour
     public int weaponID;
     [SerializeField]protected Transform PlayerSpawn;
 
-    protected Rigidbody2D rb; //verplaats naar character
-    protected bool isMoving; //verplaats naar character
-    protected Animator weaponAnimator; //verplaats naar character
+    protected Rigidbody2D rb; 
+    protected bool isMoving; 
+    protected Animator weaponAnimator; 
     [Header("Weapon")]
-    public Transform weaponTransform; //verplaats naar character
-    public string weaponObjectName = "Weapon"; //verplaats naar character
-    [SerializeField] public float weaponDistance = 1f; //verplaats naar character
+    public Transform weaponTransform; 
+    public string weaponObjectName = "Weapon";
+    [SerializeField] public float weaponDistance = 1f; 
 
     [Header("Weapon Attack")]
-    public float weaponCooldown = 0.5f; //verplaats naar character
-    protected float lastAttackTime ; //verplaats naar character
-    [SerializeField] protected int weaponDamage = 1; //verplaats naar character
+    public float weaponCooldown = 0.5f; 
+    protected float lastAttackTime ; 
+    [SerializeField] protected int weaponDamage = 1; 
     protected Vector2 inputDirection;
 
 
@@ -116,10 +116,12 @@ public class Character : MonoBehaviour
         else if (inputDirection.x < 0)
             spriteRenderer.flipX = true;
 
-        animator.SetFloat("Speed", inputDirection.magnitude);
+        // Update animator state based on movement, but is not being used yet to prevent errors commented out
+
+        // animator.SetFloat("Speed", inputDirection.magnitude);
     }
 
-    protected void RotateWeaponToMouse() //maak in character rotateToTarget en overschrijf deze met onderstaande code.
+    protected void RotateWeaponToMouse() //rotate weapon to mouse position or player position based on character type
     {
         if (weaponTransform == null) return;
 
