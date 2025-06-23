@@ -26,6 +26,10 @@ public class Player : Character
        
     }
    
+   void LateUpdate()
+{
+    RotateWeaponToMouse();
+}
     private void Update()
     {
         float moveX = Input.GetAxisRaw("Horizontal");
@@ -33,7 +37,7 @@ public class Player : Character
         inputDirection = new Vector2(moveX, moveY).normalized;
         DetermineMovementDirection();
 
-        RotateWeaponToMouse();
+        // RotateWeaponToMouse();
         //meer gebruik van functies
         if (Input.GetMouseButtonDown(0) && Time.time >= lastAttackTime + weaponCooldown)
         {
