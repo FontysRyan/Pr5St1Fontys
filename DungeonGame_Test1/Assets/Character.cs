@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
+    public UI_handler uI_Handler;
+    public EnemySpawnerManager enemySpawnerManager;
     protected Animator animator; 
     [SerializeField] protected SpriteRenderer spriteRenderer; 
     [Header("Character stats")]
@@ -11,10 +13,11 @@ public class Character : MonoBehaviour
     public float walkSpeed;
     public int characterType; //1: player, 2: enemy, 3: special_enemy, 4: boss
     public int health;
+    protected int Basehealth;
     public float resistance;
     public int weaponID;
     [SerializeField]protected Transform PlayerSpawn;
-
+    protected GameObject PlayerChar;
     protected Rigidbody2D rb; 
     protected bool isMoving; 
     protected Animator weaponAnimator; 
@@ -28,7 +31,7 @@ public class Character : MonoBehaviour
     protected float lastAttackTime ; 
     [SerializeField] protected int weaponDamage = 1; 
     protected Vector2 inputDirection;
-
+    protected float PlayerDetectionDistance = 5f;
 
     public virtual void TakeDamage(int amount)
     {
@@ -40,22 +43,42 @@ public class Character : MonoBehaviour
 
         if (health <= 0)
         {
-
+            enemySpawnerManager.AddScore(50);
+            Debug.Log("score");
             Die();
+
         }
     }
 
     public virtual void Attack(Character target)
     {
         int damage = 10; // Default base damage, you might override or calculate this
+        Debug.Log("FFFFFF");
         target.TakeDamage(damage);
         Debug.Log($"{characterName} attacked {target.characterName} for {damage} damage.");
     }
 
     public virtual void MoveEntity(float moveSpeed)
     {
-        // Simple movement logic, can be expanded
-        transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+        //Debug.Log("move " + walkSpeed);
+        if (PlayerChar == null || rb == null) return;
+
+        Vector2 currentPosition = rb.position;
+        Vector2 targetPosition = PlayerChar.transform.position;
+        float distance = Vector2.Distance(currentPosition, targetPosition);
+
+        if (distance >= PlayerDetectionDistance) return;
+
+        Vector2 direction = (targetPosition - currentPosition).normalized;
+        
+        if (direction.x > 0)
+            spriteRenderer.flipX = false;
+        else if (direction.x < 0)
+            spriteRenderer.flipX = true;
+        rb.MovePosition(currentPosition + direction * moveSpeed * Time.deltaTime);
+
+
+
     }
 
     protected virtual void Die()
@@ -71,13 +94,19 @@ public class Character : MonoBehaviour
         else
         {
             this.gameObject.transform.position = PlayerSpawn.position;
-            health = 3;
+            Basehealth = 3;
+            enemySpawnerManager.currentWave = 0;
+            enemySpawnerManager.PlayerDiedResetGame();
+            enemySpawnerManager.score = 0;
+            health = Basehealth;
+
         }
         
     }
 
     protected void SetUpComponents()
     {
+        PlayerChar = GameObject.Find("Player");
         animator = GetComponent<Animator>();
         if (animator == null)
         {
@@ -125,8 +154,8 @@ public class Character : MonoBehaviour
     {
         if (weaponTransform == null) return;
 
-        GameObject Player = GameObject.Find("Player");
-        Vector3 PlayerPos = Player.transform.position;
+        
+        Vector3 PlayerPos = PlayerChar.transform.position;
         Vector3 mouseScreenPos = Input.mousePosition;
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
         mouseWorldPos.z = 0f;
@@ -151,6 +180,7 @@ public class Character : MonoBehaviour
 
     protected void DetectEnemiesWithWeapon<T>(Collider2D weaponCol) where T : Character
     {
+
         List<Collider2D> colliders = new List<Collider2D>();
         Physics2D.OverlapCollider(weaponCol, new ContactFilter2D().NoFilter(), colliders);
         foreach (Collider2D collider in colliders)
@@ -190,6 +220,22 @@ public class Character : MonoBehaviour
                 weaponCol.enabled = false;
             }
         }
+        else
+        {
+            
+        }
+        Debug.Log("heheheh");
     }
-    
+
+    public void BoostHealth()
+    {
+        Basehealth += 5;
+        health = Basehealth;
+    }
+
+    public void BoostDamage()
+    {
+        weaponDamage += 3;
+    }
+
 }
